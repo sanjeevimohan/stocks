@@ -23,3 +23,9 @@ cp target/spring-rabbit-stocks-1.7.2.RELEASE.war /usr/local/Cellar/tomee-plume/1
 ```
 QUEUE_HOSTNAME=localhost QUEUE_USERNAME=guest QUEUE_PASSWORD=guest mvn jetty:run
 ```
+
+```
+cf push stocks -p target/target/spring-rabbit-stocks-1.7.2.RELEASE.war -b https://github.com/cloudfoundry-community/tomee-buildpack.git
+```
+
+Unable to find a single main class from the following candidates
