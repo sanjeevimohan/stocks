@@ -42,7 +42,7 @@ import org.springframework.context.annotation.Configuration;
  * @author Mark Pollack
  * @author Mark Fisher
  */
-@Configuration
+//@Configuration
 public class RabbitClientConfiguration extends AbstractStockAppRabbitConfiguration {
 
 	@Value("${stocks.quote.pattern}")

@@ -36,7 +36,7 @@ import org.springframework.context.annotation.Configuration;
  * @author Mark Pollack
  * @author Mark Fisher
  */
-@Configuration
+//@Configuration
 public abstract class AbstractStockAppRabbitConfiguration {
 
 	/**
@@ -70,7 +70,7 @@ public abstract class AbstractStockAppRabbitConfiguration {
 		return connectionFactory;
 	}
 
-	@Bean 
+	@Bean
 	public RabbitTemplate rabbitTemplate() {
 		RabbitTemplate template = new RabbitTemplate(connectionFactory());
 		template.setMessageConverter(jsonMessageConverter());

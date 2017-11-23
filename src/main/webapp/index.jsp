@@ -4,11 +4,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>Spring AMQP Stocks Demo</title>
-<link rel="stylesheet" href="static/css/main.css" type="text/css"></link>
-<link rel="stylesheet" href="static/css/colors.css" type="text/css"></link>
-<link rel="stylesheet" href="static/css/local.css" type="text/css"></link>
-<script type="text/javascript" src="static/js/jquery.min.js"></script>
-<script type="text/javascript" src="static/js/jquery.mustache.js"></script>
+<link rel="stylesheet" href="css/main.css" type="text/css"></link>
+<link rel="stylesheet" href="css/colors.css" type="text/css"></link>
+<link rel="stylesheet" href="css/local.css" type="text/css"></link>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/jquery.mustache.js"></script>
 <script type="text/javascript">
 	var running = false;
 	var timer;

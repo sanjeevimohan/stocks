@@ -25,9 +25,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.springframework.amqp.rabbit.core.RabbitGatewaySupport;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.stocks.domain.Quote;
 import org.springframework.amqp.rabbit.stocks.domain.Stock;
 import org.springframework.amqp.rabbit.stocks.domain.StockExchange;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 
 /**
  * Rabbit implementation of the {@link MarketDataGateway} for sending Market data.
@@ -35,7 +41,9 @@ import org.springframework.amqp.rabbit.stocks.domain.StockExchange;
  * @author Mark Pollack
  * @author Mark Fisher
  */
-public class RabbitMarketDataGateway extends RabbitGatewaySupport implements MarketDataGateway {
+@Configuration
+@EnableScheduling
+public class RabbitMarketDataGateway implements MarketDataGateway {
 
 	private static Log logger = LogFactory.getLog(RabbitMarketDataGateway.class);
 
@@ -43,8 +51,11 @@ public class RabbitMarketDataGateway extends RabbitGatewaySupport implements Mar
 
 	private final List<MockStock> stocks = new ArrayList<MockStock>();
 
+	@Autowired
+	private RabbitTemplate rabbitTemplate;
 
 	public RabbitMarketDataGateway() {
+
 		this.stocks.add(new MockStock("AAPL", StockExchange.nasdaq, 255));
 		this.stocks.add(new MockStock("CSCO", StockExchange.nasdaq, 22));
 		this.stocks.add(new MockStock("DELL", StockExchange.nasdaq, 15));
@@ -52,22 +63,25 @@ public class RabbitMarketDataGateway extends RabbitGatewaySupport implements Mar
 		this.stocks.add(new MockStock("INTC", StockExchange.nasdaq, 22));
 		this.stocks.add(new MockStock("MSFT", StockExchange.nasdaq, 29));
 		this.stocks.add(new MockStock("ORCL", StockExchange.nasdaq, 24));
-		this.stocks.add(new MockStock("CAJ", StockExchange.nyse, 43));
-		this.stocks.add(new MockStock("F", StockExchange.nyse, 12));
-		this.stocks.add(new MockStock("GE", StockExchange.nyse, 18));
-		this.stocks.add(new MockStock("HMC", StockExchange.nyse, 32));
-		this.stocks.add(new MockStock("HPQ", StockExchange.nyse, 48));
-		this.stocks.add(new MockStock("IBM", StockExchange.nyse, 130));
-		this.stocks.add(new MockStock("TM", StockExchange.nyse, 76));
+//		this.stocks.add(new MockStock("CAJ", StockExchange.nyse, 43));
+//		this.stocks.add(new MockStock("F", StockExchange.nyse, 12));
+//		this.stocks.add(new MockStock("GE", StockExchange.nyse, 18));
+//		this.stocks.add(new MockStock("HMC", StockExchange.nyse, 32));
+//		this.stocks.add(new MockStock("HPQ", StockExchange.nyse, 48));
+//		this.stocks.add(new MockStock("IBM", StockExchange.nyse, 130));
+//		this.stocks.add(new MockStock("TM", StockExchange.nyse, 76));
 	}
 
 
+
+	@Scheduled(fixedDelay = 5000L)
 	public void sendMarketData() {
 		Quote quote = generateFakeQuote();
 		Stock stock = quote.getStock();
 		logger.info("Sending Market Data for " + stock.getTicker());
-		String routingKey = "app.stock.quotes."+ stock.getStockExchange() + "." + stock.getTicker();
-		getRabbitTemplate().convertAndSend(routingKey, quote);
+		String routingKey = "app.stock.quotes."+ stock.getStockExchange(); // + "." + stock.getTicker();
+		System.out.println("ROUTING KEY " + routingKey);
+		rabbitTemplate.convertAndSend(routingKey, quote);
 	}
 
 	private Quote generateFakeQuote() {

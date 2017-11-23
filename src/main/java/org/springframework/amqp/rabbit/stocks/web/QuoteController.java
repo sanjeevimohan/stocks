@@ -25,6 +25,7 @@ import java.util.concurrent.PriorityBlockingQueue;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.stocks.domain.Quote;
 import org.springframework.amqp.rabbit.stocks.domain.TradeRequest;
 import org.springframework.amqp.rabbit.stocks.domain.TradeResponse;
@@ -59,7 +60,7 @@ public class QuoteController {
 	}
 
 	public void handleTrade(TradeResponse response) {
-		logger.info("Client received: " + response);
+		logger.info("Client received trade: " + response);
 		String key = response.getRequestId();
 		responses.putIfAbsent(key, response);
 		Collection<TradeResponse> queue = new ArrayList<TradeResponse>(responses.values());

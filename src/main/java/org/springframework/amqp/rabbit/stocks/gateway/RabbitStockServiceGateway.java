@@ -23,7 +23,9 @@ import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.amqp.rabbit.core.RabbitGatewaySupport;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.stocks.domain.TradeRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Rabbit implementation of {@link StockServiceGateway} to send trade requests to an external process.
@@ -39,8 +41,11 @@ public class RabbitStockServiceGateway extends RabbitGatewaySupport implements S
 		this.defaultReplyTo = defaultReplyTo;
 	}
 
+	@Autowired
+	private RabbitTemplate rabbitTemplate;
+
 	public void send(TradeRequest tradeRequest) {
-		getRabbitTemplate().convertAndSend(tradeRequest, new MessagePostProcessor() {
+		rabbitTemplate.convertAndSend(tradeRequest, new MessagePostProcessor() {
 			public Message postProcessMessage(Message message) throws AmqpException {
 				message.getMessageProperties().setReplyTo(defaultReplyTo);
 				try {
